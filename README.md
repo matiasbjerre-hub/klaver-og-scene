@@ -1,6 +1,6 @@
-# Klaver & Scene
+# Matias' Web Apps
 
-Landingsside for to små webapps:
+Landingsside for de private webapps:
 
 | App | Live | Repo |
 |---|---|---|
