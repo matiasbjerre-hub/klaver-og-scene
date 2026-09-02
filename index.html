@@ -3,18 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="To små webapps: akkorder og fingersætning til klaver, og en søgning efter forestillinger og koncerter.">
+<meta name="description" content="Personlige webapps: akkorder og fingersætning til klaver, og en søgning efter forestillinger og koncerter.">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎹</text></svg>">
 <title>Matias&rsquo; Web Apps</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Karla:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Karla:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-  /* Light palette lives on bare :root; the dark blocks below redefine only
-     tokens, so the un-stamped (system) state resolves as a complete set. */
+  /* Same card-grid layout as the Rent.Group Tools page (bar, intro, .grid of
+     .app cards with a top-rule-fill hover and a monospace chips/url line) —
+     this page keeps its own palette and type pairing rather than adopting
+     Rent.Group's black/red, so the two stay visually distinct while sharing
+     structure. Light palette lives on bare :root; the dark blocks below
+     redefine only tokens, so the un-stamped (system) state resolves as a
+     complete set. */
   :root {
     --bg:      #f3efe8;   /* warm bone, biased toward the brass accent */
-    --surface: #faf7f2;
+    --surface: #ffffff;
     --ink:     #241a28;   /* deep plum-black */
     --muted:   #6c5f6e;
     --line:    #ddd4c8;
@@ -23,13 +28,13 @@
     --keyw:    #faf7f2;
     --keyline: #d9cfc2;
     --keyb:    #241a28;
-    --hover:   rgba(36, 26, 40, 0.035);
-    --sp:      clamp(1.25rem, 5vw, 3rem);
+    --shadow:  0 14px 34px rgba(36, 26, 40, 0.14);
+    --sp:      clamp(1.25rem, 4vw, 3.25rem);
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg:      #17101f;
-      --surface: #201729;
+      --surface: #241a30;
       --ink:     #ede4da;
       --muted:   #a394a6;
       --line:    #382a44;
@@ -38,12 +43,12 @@
       --keyw:    #ded3e0;
       --keyline: #a898ad;
       --keyb:    #17101f;
-      --hover:   rgba(237, 228, 218, 0.045);
+      --shadow:  0 14px 34px rgba(0, 0, 0, 0.5);
     }
   }
   :root[data-theme="dark"] {
     --bg:      #17101f;
-    --surface: #201729;
+    --surface: #241a30;
     --ink:     #ede4da;
     --muted:   #a394a6;
     --line:    #382a44;
@@ -52,7 +57,7 @@
     --keyw:    #ded3e0;
     --keyline: #a898ad;
     --keyb:    #17101f;
-    --hover:   rgba(237, 228, 218, 0.045);
+    --shadow:  0 14px 34px rgba(0, 0, 0, 0.5);
   }
 
   * { box-sizing: border-box; }
@@ -63,41 +68,15 @@
     color: var(--ink);
     font-family: 'Karla', system-ui, -apple-system, sans-serif;
     font-size: 16px;
-    line-height: 1.6;
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
   }
 
-  .wrap { max-width: 860px; margin: 0 auto; padding-inline: var(--sp); }
-
-  header { padding-block: clamp(3rem, 10vw, 5.5rem) clamp(2rem, 6vw, 3rem); }
-  .hero { display: flex; flex-direction: column; gap: 1rem; }
-
-  .eyebrow {
-    margin: 0;
-    font-size: 0.72rem;
-    font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--brass);
-  }
-
-  h1 {
-    margin: 0;
-    font-family: 'Fraunces', Georgia, serif;
-    font-optical-sizing: auto;
-    font-weight: 600;
-    font-size: clamp(2.4rem, 8.5vw, 4.2rem);
-    line-height: 1.02;
-    letter-spacing: -0.02em;
-    text-wrap: balance;
-  }
-
-  .lede { margin: 0; max-width: 52ch; color: var(--muted); font-size: clamp(1.02rem, 2.2vw, 1.14rem); }
-
-  /* The divider is a keyboard, drawn in two gradient layers: white keys with
-     hairline separators underneath, black keys (5 per octave, 62% depth) on
-     top. One octave = 98px = 7 white keys of 14px. */
-  .keys {
+  /* The masthead bar is a keyboard instead of a logo: drawn in two gradient
+     layers — white keys with hairline separators underneath, black keys
+     (5 per octave, 62% depth) on top. One octave = 98px = 7 white keys of
+     14px. */
+  .bar {
     height: 34px;
     background-color: var(--keyw);
     background-image:
@@ -112,119 +91,158 @@
     background-size: 98px 62%, 98px 100%;
     background-repeat: repeat-x, repeat-x;
     background-position: 0 0, 0 0;
-    border-block: 1px solid var(--keyline);
+    border-bottom: 1px solid var(--keyline);
   }
 
-  /* Programme-style index: a label column, then the entry. */
-  .entry {
-    display: grid;
-    grid-template-columns: 8.5rem 1fr;
-    gap: 0.5rem 2rem;
-    align-items: start;
-    padding: clamp(2rem, 5vw, 2.9rem) 1rem;
-    margin-inline: -1rem;
-    border-radius: 6px;
-    border-bottom: 1px solid var(--line);
-    text-decoration: none;
-    color: inherit;
-    transition: background-color 0.2s ease;
+  main {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: clamp(2.5rem, 7vw, 4.5rem) var(--sp) 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.25rem, 5vw, 3.25rem);
   }
-  .entry:hover, .entry:focus-visible { background-color: var(--hover); }
-  .entry:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
 
-  .label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    letter-spacing: 0.18em;
+  .intro { display: flex; flex-direction: column; gap: 0.85rem; max-width: 52ch; }
+
+  .eyebrow {
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    padding-top: 0.7rem;
     color: var(--brass);
+    margin: 0;
   }
-  .entry.stage .label { color: var(--rose); }
 
-  .body { display: flex; flex-direction: column; gap: 0.7rem; }
-
-  .entry h2 {
+  h1 {
     margin: 0;
     font-family: 'Fraunces', Georgia, serif;
     font-optical-sizing: auto;
     font-weight: 600;
-    font-size: clamp(1.6rem, 4.5vw, 2.1rem);
-    line-height: 1.1;
+    font-size: clamp(2.1rem, 6.5vw, 3.35rem);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .lede { margin: 0; color: var(--muted); font-size: clamp(1rem, 2vw, 1.09rem); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.15rem;
+  }
+
+  .app {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    background: var(--surface);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.65rem 1.6rem 1.5rem;
+    text-decoration: none;
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  /* The accent rule is the only moving part: it runs the top edge of a card
+     and fills across on hover. Klaver gets brass, Scene gets rose. */
+  .app::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    height: 3px;
+    width: 3.25rem;
+    background: var(--brass);
+    transition: width 0.32s cubic-bezier(0.2, 0.7, 0.3, 1);
+  }
+  .app.stage::before { background: var(--rose); }
+  .app:hover, .app:focus-visible { transform: translateY(-3px); box-shadow: var(--shadow); }
+  .app:hover::before, .app:focus-visible::before { width: 100%; }
+  .app:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+  .app.stage:focus-visible { outline-color: var(--rose); }
+
+  .app h2 {
+    margin: 0;
+    font-family: 'Fraunces', Georgia, serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+    font-size: 1.5rem;
     letter-spacing: -0.015em;
-    transition: color 0.2s ease;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
   }
-  .entry:hover h2 { color: var(--brass); }
-  .entry.stage:hover h2 { color: var(--rose); }
-  .entry h2 .arrow {
-    display: inline-block;
+  .app h2 .arrow {
     font-family: 'Karla', sans-serif;
-    font-weight: 400;
-    font-size: 0.62em;
-    vertical-align: 0.12em;
-    margin-left: 0.35rem;
-    opacity: 0;
-    transform: translateX(-6px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    color: var(--brass);
+    font-weight: 600;
+    transition: transform 0.2s ease;
+    display: inline-block;
   }
-  .entry:hover h2 .arrow, .entry:focus-visible h2 .arrow { opacity: 1; transform: translateX(0); }
+  .app.stage h2 .arrow { color: var(--rose); }
+  .app:hover h2 .arrow { transform: translateX(4px); }
 
-  .entry p { margin: 0; max-width: 54ch; color: var(--muted); }
+  .app p { margin: 0; color: var(--muted); font-size: 0.94rem; max-width: 40ch; }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem 0.55rem; align-items: center; margin-top: 0.15rem; }
+  /* Chips are structural, not decorative: they name what the app actually
+     covers, the way they did in the earlier list layout. */
+  .chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.15rem; }
   .chip {
-    font-size: 0.74rem;
-    font-weight: 500;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 0.71rem;
+    letter-spacing: 0.04em;
     color: var(--muted);
     border: 1px solid var(--line);
     border-radius: 999px;
-    padding: 0.16rem 0.66rem;
+    padding: 0.22rem 0.62rem;
     white-space: nowrap;
   }
 
   .url {
-    font-size: 0.76rem;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
     color: var(--muted);
     opacity: 0.75;
+    border-top: 1px solid var(--line);
+    padding-top: 0.8rem;
+    margin-top: auto;
     overflow-wrap: anywhere;
   }
 
   footer {
-    padding-block: 2.5rem 3.5rem;
-    font-size: 0.76rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    border-top: 1px solid var(--line);
+    padding: 1.15rem var(--sp) 2.5rem;
+    font-family: 'IBM Plex Mono', ui-monospace, monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
     color: var(--muted);
-    opacity: 0.7;
+    opacity: 0.75;
   }
-  footer p { margin: 0; }
+  footer p { margin: 0; max-width: 1080px; margin-inline: auto; }
 
-  @media (max-width: 620px) {
-    .entry { grid-template-columns: 1fr; gap: 0.55rem; }
-    .label { padding-top: 0; }
-  }
   @media (prefers-reduced-motion: reduce) {
-    .entry, .entry h2, .entry h2 .arrow { transition: none; }
+    .app, .app::before, .app h2 .arrow { transition: none; }
   }
 </style>
 </head>
 <body>
 
-<header class="wrap">
-  <div class="hero">
+<div class="bar" aria-hidden="true"></div>
+
+<main>
+  <div class="intro">
     <p class="eyebrow">Egne projekter</p>
     <h1>Matias&rsquo; Web Apps</h1>
-    <p class="lede">To små webapps. Den ene finder fingersætningen til dine akkorder. Den anden finder ud af, hvor og hvornår en kunstner optræder.</p>
+    <p class="lede">Personlige webapps, ikke arbejdsrelaterede. Åbn en herfra, eller sæt bogmærke og spring denne side over.</p>
   </div>
-</header>
 
-<div class="keys" aria-hidden="true"></div>
-
-<main class="wrap">
-  <a class="entry" href="https://matiasbjerre-hub.github.io/Chord-Score/" target="_blank" rel="noopener">
-    <div class="label">Klaver</div>
-    <div class="body">
-      <h2>Klaver-akkorder<span class="arrow" aria-hidden="true">→</span></h2>
+  <div class="grid">
+    <a class="app" href="https://matiasbjerre-hub.github.io/Chord-Score/" target="_blank" rel="noopener">
+      <h2>Chord Score <span class="arrow" aria-hidden="true">&rarr;</span></h2>
       <p>Skriv akkorderne til en sang, se dem på klaviatur eller guitarhals, og få den fingersætning der kræver mindst bevægelse mellem greb.</p>
       <div class="chips">
         <span class="chip">Klaviatur</span>
@@ -232,13 +250,10 @@
         <span class="chip">Fingersætning</span>
       </div>
       <div class="url">matiasbjerre-hub.github.io/Chord-Score/</div>
-    </div>
-  </a>
+    </a>
 
-  <a class="entry stage" href="https://matiasbjerre-hub.github.io/Artist_search/" target="_blank" rel="noopener">
-    <div class="label">Scene</div>
-    <div class="body">
-      <h2>Artist Search<span class="arrow" aria-hidden="true">→</span></h2>
+    <a class="app stage" href="https://matiasbjerre-hub.github.io/Artist_search/" target="_blank" rel="noopener">
+      <h2>Artist Search <span class="arrow" aria-hidden="true">&rarr;</span></h2>
       <p>Indtast navnet på en skuespiller, musiker eller et orkester og få de forestillinger og koncerter, de medvirker i — med rolle, produktion, spillested og link til billetten.</p>
       <div class="chips">
         <span class="chip">Otte danske kilder</span>
@@ -246,12 +261,12 @@
         <span class="chip">Link til forestillingen</span>
       </div>
       <div class="url">matiasbjerre-hub.github.io/Artist_search/</div>
-    </div>
-  </a>
+    </a>
+  </div>
 </main>
 
-<footer class="wrap">
-  <p>Begge kører som statiske sider — ingen login, ingen konto.</p>
+<footer>
+  <p>Statiske sider — ingen login, ingen konto.</p>
 </footer>
 
 </body>
