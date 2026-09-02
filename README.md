@@ -4,7 +4,7 @@ Landingsside for de private webapps:
 
 | App | Live | Repo |
 |---|---|---|
-| **Klaver-akkorder** — akkorder og fingersætning | https://matiasbjerre-hub.github.io/Piano-app/ | [`Piano-app`](https://github.com/matiasbjerre-hub/Piano-app) |
+| **Klaver-akkorder** — akkorder og fingersætning | https://matiasbjerre-hub.github.io/Chord-Score/ | [`Chord-Score`](https://github.com/matiasbjerre-hub/Chord-Score) |
 | **Artist Search** — forestillinger og koncerter | https://matiasbjerre-hub.github.io/Artist_search/ | [`Artist_search`](https://github.com/matiasbjerre-hub/Artist_search) |
 
 **Live:** https://matiasbjerre-hub.github.io/klaver-og-scene/
