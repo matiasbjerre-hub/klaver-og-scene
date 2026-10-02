@@ -1,5 +1,9 @@
 # Matias' Web Apps
 
+> **Flyttet 03-10-2026:** Siden er erstattet af **Matias' Web-apps Dashboard** på Vercel:
+> https://matias-web-apps.vercel.app (privat repo `matiasbjerre-hub/matias-web-apps`, auto-deploy fra
+> `main`). `index.html` her sender nu kun gamle links videre. Resten af denne README er historik.
+
 Landingsside for de private webapps:
 
 | App | Live | Repo |
